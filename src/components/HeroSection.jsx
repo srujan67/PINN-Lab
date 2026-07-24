@@ -181,7 +181,7 @@ export default function HeroSection({ onEnterExplore, onNavigateToEquation }) {
       />
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center text-center px-6 w-full max-w-5xl" style={{ paddingTop: '80px', paddingBottom: '60px' }}>
+      <div className="hero-content relative z-10 flex flex-col items-center text-center px-6 w-full max-w-5xl" style={{ paddingTop: '80px', paddingBottom: '60px' }}>
 
         {/* ═══ Title Block (fades out when typing) ═══ */}
         <div
@@ -406,6 +406,7 @@ export default function HeroSection({ onEnterExplore, onNavigateToEquation }) {
           {/* Example chips */}
           {true && (
             <div
+              className="hero-example-btn"
               style={{
                 display: 'flex',
                 flexDirection: 'column',

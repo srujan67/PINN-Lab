@@ -3,6 +3,26 @@ import { motion, AnimatePresence } from 'framer-motion'
 import SimpleSimulator from './SimpleSimulator'
 import { WorkspaceContext } from './WorkspaceShared'
 import { getInterpretation } from '../lib/parameterExtractor'
+import {
+  ProjectileSimulator,
+  EnergySimulator,
+  MomentumSimulator,
+  CircularMotionSimulator,
+  GravitationSimulator,
+  BernoulliSimulator,
+  ReynoldsSimulator,
+  NavierSimulator,
+  CoulombSimulator,
+  LorentzForceSimulator,
+  IdealGasSimulator,
+  HookeSimulator,
+  SHMSimulator,
+  OhmSimulator,
+  DeBroglieSimulator,
+  PhotoelectricSimulator,
+  RCCircuitSimulator,
+  NewtonSimulator
+} from './NewSimulators'
 
 
 // ══════════════════════════
@@ -39,7 +59,7 @@ const EQUATIONS = [
     description: 'Defines classical dynamics by stating that the acceleration of an object is directly proportional to the net force acting upon it and inversely proportional to its mass. It forms the core foundation of classical mechanics, governing everyday motion from falling apples to orbiting satellites.',
     realWorldApps: 'Rocket propulsion, automotive engineering, structural design, and sports biomechanics.',
     variables: [{ symbol: 'F', def: 'Net force vector (N)' }, { symbol: 'm', def: 'Inertial mass (kg)' }, { symbol: 'a', def: 'Acceleration vector (m/s²)' }],
-    Simulator: SimpleSimulator },
+    Simulator: NewtonSimulator },
   { id: 'heat', branch: 'thermo', name: 'Heat Equation', formula: '∂T/∂t = α ∇²T', color: '#E07840',
     description: 'Describes how thermal energy diffuses through a given region over time, smoothing out temperature gradients. It represents a fundamental transport equation in thermodynamics, explaining heat conduction in solids, fluid thermal dissipation, and geological cooling processes.',
     realWorldApps: 'Metallurgy, climate modeling, electronics cooling, and geophysics.',
@@ -54,7 +74,7 @@ const EQUATIONS = [
     description: 'Applies Newton\'s second law to fluid motion, describing how velocity, pressure, temperature, and density are related in a moving viscous fluid. These equations are crucial for simulating atmospheric weather patterns, ocean currents, aerodynamics of aircraft, and pipe flow dynamics.',
     realWorldApps: 'Aerodynamics, weather forecasting, pipe network design, and ocean currents.',
     variables: [{ symbol: 'u', def: 'Velocity vector field' }, { symbol: 'ρ', def: 'Fluid density' }, { symbol: 'p', def: 'Pressure gradient' }, { symbol: 'μ', def: 'Dynamic viscosity' }],
-    Simulator: SimpleSimulator },
+    Simulator: NavierSimulator },
   { id: 'continuity', branch: 'fluid', name: 'Continuity Equation', formula: '∂ρ/∂t + ∇·(ρu) = 0', color: '#88C0B8',
     description: 'Expresses the fundamental principle of mass conservation in fluid dynamics, stating that the rate of mass entering a system must equal the rate of mass leaving it. It dictates how fluid velocity must increase when flowing through a constricted pipe or channel to maintain steady flow.',
     realWorldApps: 'Hydraulic systems, blood flow analysis, aerodynamics, and chemical reactors.',
@@ -89,82 +109,82 @@ const EQUATIONS = [
     description: 'Analyzes the trajectory of an object launched into the air at a given angle and velocity. It decomposes motion into independent horizontal and vertical components, where only vertical motion is influenced by gravitational acceleration. This framework predicts the range, maximum height, and time of flight for any projectile.',
     realWorldApps: 'Sports analytics (basketball, football), ballistic trajectory calculation, fireworks displays, and long jump training.',
     variables: [{ symbol: 'v₀', def: 'Initial launch velocity (m/s)' }, { symbol: 'θ', def: 'Launch angle from horizontal' }, { symbol: 'g', def: 'Gravitational acceleration ≈ 9.81 m/s²' }, { symbol: 't', def: 'Time elapsed (s)' }],
-    Simulator: SimpleSimulator },
+    Simulator: ProjectileSimulator },
   { id: 'energy', branch: 'classical', name: 'Conservation of Energy', formula: 'KE + PE = E_total', color: '#88C0B8',
     description: 'States that the total mechanical energy of an isolated system remains constant, with energy only converting between kinetic and potential forms. As an object falls from height, its potential energy transforms into kinetic energy while the sum is preserved throughout the motion.',
     realWorldApps: 'Roller coaster design, hydroelectric power generation, bungee jumping safety calculations, and ski jump engineering.',
     variables: [{ symbol: 'KE', def: 'Kinetic energy = ½mv² (J)' }, { symbol: 'PE', def: 'Potential energy = mgh (J)' }, { symbol: 'E', def: 'Total mechanical energy (J)' }],
-    Simulator: SimpleSimulator },
+    Simulator: EnergySimulator },
   { id: 'momentum', branch: 'classical', name: 'Momentum', formula: 'p = mv', color: '#88C0B8',
     description: 'Defines the quantity of motion of a moving body, measured as the product of its mass and velocity. In isolated systems, total momentum is conserved during collisions, enabling prediction of post-collision velocities for elastic and inelastic impacts.',
     realWorldApps: 'Car crash analysis, billiards physics, rocket propulsion, and Newton\'s cradle.',
     variables: [{ symbol: 'p', def: 'Linear momentum (kg·m/s)' }, { symbol: 'm', def: 'Mass (kg)' }, { symbol: 'v', def: 'Velocity (m/s)' }],
-    Simulator: SimpleSimulator },
+    Simulator: MomentumSimulator },
   { id: 'circular', branch: 'classical', name: 'Circular Motion', formula: 'F = mv²/r', color: '#88C0B8',
     description: 'Describes the centripetal force required to maintain an object moving along a circular path at constant speed. The force always points radially inward toward the center of the circle, and its magnitude depends on the object\'s mass, speed, and the radius of the circular path.',
     realWorldApps: 'Satellite orbits, car cornering physics, centrifuge design, and amusement park rides.',
     variables: [{ symbol: 'F', def: 'Centripetal force (N)' }, { symbol: 'm', def: 'Mass (kg)' }, { symbol: 'v', def: 'Tangential velocity (m/s)' }, { symbol: 'r', def: 'Radius of circular path (m)' }],
-    Simulator: SimpleSimulator },
+    Simulator: CircularMotionSimulator },
   { id: 'gravitation', branch: 'classical', name: 'Universal Gravitation', formula: 'F = Gm₁m₂/r²', color: '#88C0B8',
     description: 'Newton\'s law of universal gravitation states that every particle attracts every other particle with a force proportional to the product of their masses and inversely proportional to the square of the distance between them. It explains planetary orbits, tidal forces, and weight.',
     realWorldApps: 'Space mission planning, satellite trajectories, tidal predictions, and weight calculations on other planets.',
     variables: [{ symbol: 'G', def: 'Gravitational constant ≈ 6.674×10⁻¹¹ N·m²/kg²' }, { symbol: 'm₁,m₂', def: 'Masses of the two bodies' }, { symbol: 'r', def: 'Distance between centers' }],
-    Simulator: SimpleSimulator },
+    Simulator: GravitationSimulator },
   { id: 'bernoulli', branch: 'fluid', name: 'Bernoulli Equation', formula: 'P + ½ρv² + ρgh = const', color: '#88C0B8',
     description: 'Describes the conservation of energy in a flowing fluid, relating pressure, velocity, and elevation. As fluid speeds up (e.g., through a constriction), its static pressure decreases, and vice versa. This principle is fundamental to understanding lift, flow meters, and pipe dynamics.',
     realWorldApps: 'Airplane lift generation, venturi meters, carburetors, pitot tubes, and water tower pressure.',
     variables: [{ symbol: 'P', def: 'Static pressure (Pa)' }, { symbol: 'ρ', def: 'Fluid density (kg/m³)' }, { symbol: 'v', def: 'Flow velocity (m/s)' }, { symbol: 'h', def: 'Elevation height (m)' }],
-    Simulator: SimpleSimulator },
+    Simulator: BernoulliSimulator },
   { id: 'reynolds_num', branch: 'fluid', name: 'Reynolds Number', formula: 'Re = ρvL/μ', color: '#88C0B8',
     description: 'A dimensionless quantity that predicts whether fluid flow will be laminar (smooth, orderly) or turbulent (chaotic, mixing). Below ~2300, flow is laminar; above ~4000, it is fully turbulent. The transition regime lies between these values and is highly sensitive to disturbances.',
     realWorldApps: 'Pipe system design, aircraft aerodynamics, blood flow analysis, industrial mixing, and weather modeling.',
     variables: [{ symbol: 'Re', def: 'Reynolds number (dimensionless)' }, { symbol: 'ρ', def: 'Fluid density (kg/m³)' }, { symbol: 'v', def: 'Flow velocity (m/s)' }, { symbol: 'L', def: 'Characteristic length (m)' }, { symbol: 'μ', def: 'Dynamic viscosity (Pa·s)' }],
-    Simulator: SimpleSimulator },
+    Simulator: ReynoldsSimulator },
   { id: 'coulomb', branch: 'em', name: 'Coulomb\'s Law', formula: 'F = kq₁q₂/r²', color: '#A09CC8',
     description: 'Quantifies the electrostatic force between two point charges. Like charges repel and opposite charges attract, with the force magnitude proportional to the product of charges and inversely proportional to the square of separation distance. It is the electrical analog of Newton\'s gravitational law.',
     realWorldApps: 'Electrostatic interactions in chemistry, crystal bonding, electroscope physics, and charge separation.',
     variables: [{ symbol: 'k', def: 'Coulomb constant ≈ 8.99×10⁹ N·m²/C²' }, { symbol: 'q₁,q₂', def: 'Electric charges (C)' }, { symbol: 'r', def: 'Separation distance (m)' }],
-    Simulator: SimpleSimulator },
+    Simulator: CoulombSimulator },
   { id: 'lorentzforce', branch: 'em', name: 'Lorentz Force', formula: 'F = qv × B', color: '#A09CC8',
     description: 'Describes the force experienced by a charged particle moving through a magnetic field. The force is always perpendicular to both the velocity and the magnetic field, causing the particle to follow a circular or helical trajectory. This is the basis for cyclotrons and mass spectrometers.',
     realWorldApps: 'Mass spectrometers, cyclotron particle accelerators, MRI machines, aurora borealis, and CRT displays.',
     variables: [{ symbol: 'F', def: 'Lorentz force (N)' }, { symbol: 'q', def: 'Particle charge (C)' }, { symbol: 'v', def: 'Particle velocity (m/s)' }, { symbol: 'B', def: 'Magnetic field strength (T)' }],
-    Simulator: SimpleSimulator },
+    Simulator: LorentzForceSimulator },
   { id: 'idealgas', branch: 'thermo', name: 'Ideal Gas Law', formula: 'PV = nRT', color: '#E07840',
     description: 'Relates the pressure, volume, temperature, and amount of an ideal gas. It combines Boyle\'s, Charles\'s, and Avogadro\'s laws into a single equation of state. While real gases deviate at high pressures or low temperatures, it provides excellent predictions for most practical conditions.',
     realWorldApps: 'Weather balloon behavior, scuba diving gas calculations, internal combustion engines, tire pressure changes, and altitude sickness.',
     variables: [{ symbol: 'P', def: 'Gas pressure (Pa)' }, { symbol: 'V', def: 'Volume (m³)' }, { symbol: 'n', def: 'Amount of substance (mol)' }, { symbol: 'R', def: 'Gas constant = 8.314 J/(mol·K)' }, { symbol: 'T', def: 'Absolute temperature (K)' }],
-    Simulator: SimpleSimulator },
+    Simulator: IdealGasSimulator },
   { id: 'hooke', branch: 'classical', name: "Hooke's Law", formula: 'F = −kx', color: '#88C0B8',
     description: 'States that the force needed to extend or compress a spring by some distance is proportional to that distance. The restoring force always acts in the opposite direction to the displacement, making it the foundation of elasticity and the starting point for understanding oscillatory systems.',
     realWorldApps: 'Shock absorbers, spring scales, mattress design, trampoline engineering, and suspension bridges.',
     variables: [{ symbol: 'F', def: 'Restoring force (N)' }, { symbol: 'k', def: 'Spring constant (N/m)' }, { symbol: 'x', def: 'Displacement from equilibrium (m)' }],
-    Simulator: SimpleSimulator },
+    Simulator: HookeSimulator },
   { id: 'shm', branch: 'classical', name: 'Simple Harmonic Motion', formula: 'x = A cos(ωt + φ)', color: '#88C0B8',
     description: 'Describes the repetitive back-and-forth motion of a system about an equilibrium position, where the restoring force is directly proportional to displacement. The motion is perfectly sinusoidal, with a period that depends only on the system parameters, not the amplitude.',
     realWorldApps: 'Clock pendulums, tuning forks, seismographs, molecular vibrations, and playground swings.',
     variables: [{ symbol: 'A', def: 'Amplitude — maximum displacement (m)' }, { symbol: 'ω', def: 'Angular frequency = 2πf (rad/s)' }, { symbol: 'φ', def: 'Phase constant (rad)' }, { symbol: 't', def: 'Time (s)' }],
-    Simulator: SimpleSimulator },
+    Simulator: SHMSimulator },
   { id: 'ohm', branch: 'em', name: "Ohm's Law", formula: 'V = IR', color: '#A09CC8',
     description: 'States that the electric current flowing through a conductor between two points is directly proportional to the voltage across the two points and inversely proportional to the resistance. It is the most fundamental law of circuit analysis, governing everything from simple LED circuits to complex power grids.',
     realWorldApps: 'Circuit design, LED resistor calculation, household wiring, battery systems, and multimeter operation.',
     variables: [{ symbol: 'V', def: 'Voltage / potential difference (V)' }, { symbol: 'I', def: 'Electric current (A)' }, { symbol: 'R', def: 'Electrical resistance (Ω)' }],
-    Simulator: SimpleSimulator },
+    Simulator: OhmSimulator },
   { id: 'debroglie', branch: 'quantum', name: 'de Broglie Wavelength', formula: 'λ = h/p = h/(mv)', color: '#C4956A',
     description: 'Proposes that every particle with momentum has an associated wavelength, establishing the wave–particle duality of matter. For subatomic particles like electrons, this wavelength is significant and experimentally measurable through diffraction, while for macroscopic objects it is immeasurably small.',
     realWorldApps: 'Electron microscopy, neutron diffraction, semiconductor band theory, and quantum tunneling applications.',
     variables: [{ symbol: 'λ', def: 'de Broglie wavelength (m)' }, { symbol: 'h', def: 'Planck constant ≈ 6.626 × 10⁻³⁴ J·s' }, { symbol: 'p', def: 'Momentum = mv (kg·m/s)' }],
-    Simulator: SimpleSimulator },
+    Simulator: DeBroglieSimulator },
   { id: 'photoelectric', branch: 'quantum', name: 'Photoelectric Effect', formula: 'KE = hf − φ', color: '#C4956A',
     description: 'Explains that when light of sufficient frequency strikes a metal surface, it ejects electrons with kinetic energy equal to the photon energy minus the metal\'s work function. Below the threshold frequency, no electrons are emitted regardless of light intensity — proving the quantized particle nature of light.',
     realWorldApps: 'Solar cells, photomultiplier tubes, camera sensors, night vision devices, and automatic doors.',
     variables: [{ symbol: 'KE', def: 'Kinetic energy of emitted electron (J or eV)' }, { symbol: 'h', def: 'Planck constant' }, { symbol: 'f', def: 'Frequency of incident light (Hz)' }, { symbol: 'φ', def: 'Work function of the metal (eV)' }],
-    Simulator: SimpleSimulator },
+    Simulator: PhotoelectricSimulator },
   { id: 'rc_circuit', branch: 'em', name: 'RC Circuit Charging', formula: 'V_c(t) = V₀(1 − e^(−t/RC))', color: '#A09CC8',
     description: 'Governs the charging behavior of a resistor-capacitor circuit, describing how the capacitor voltage increases exponentially towards the source voltage over time. The rate of charging is determined by the circuit time constant τ = RC, which represents the time required for the capacitor to charge to approximately 63.2% of its maximum value.',
     realWorldApps: 'Electronic timers, noise filters, power supply smoothing, and camera flash units.',
     variables: [{ symbol: 'V_c(t)', def: 'Capacitor voltage at time t (V)' }, { symbol: 'V₀', def: 'Source voltage (V)' }, { symbol: 'R', def: 'Resistance (Ω)' }, { symbol: 'C', def: 'Capacitance (F)' }, { symbol: 't', def: 'Time elapsed (s)' }],
-    Simulator: SimpleSimulator },
+    Simulator: RCCircuitSimulator },
 ]
 
 // ══════════════════════════
@@ -522,6 +542,8 @@ function EquationFullView({ equation, onClose, initialParams }) {
     padding: '2.5rem',
   };
 
+  const cardClass = 'equation-view-card rounded-2xl border';
+
   return (
     <WorkspaceContext.Provider value={{ inputsTarget: inputsEl, resultsTarget: resultsEl }}>
       <motion.div
@@ -532,7 +554,7 @@ function EquationFullView({ equation, onClose, initialParams }) {
         className="w-full min-h-screen pb-32 relative pt-4"
         style={{ color: '#E8DDCC' }}
       >
-        <div className="w-[90%] max-w-[1400px] mx-auto w-full flex flex-col gap-8">
+        <div className="w-[90%] max-w-[1400px] mx-auto w-full flex flex-col gap-8 equation-view-wrapper">
           {/* 1. Top Left Exit Button — gold-accent outlined */}
           <div className="w-full flex justify-start">
             <button
@@ -579,9 +601,9 @@ function EquationFullView({ equation, onClose, initialParams }) {
           {/* Row 1: Theory Section (Side by side cards with exactly 32px spacing) */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Left Card: Meaning & Apps */}
-            <div className="rounded-2xl border flex flex-col justify-between gap-8" style={cardStyle}>
+            <div className={cardClass + ' flex flex-col justify-between gap-8'} style={cardStyle}>
               <div>
-                <h3 className="text-xs font-mono tracking-widest text-[rgba(220,208,188,0.45)] uppercase mb-5 font-bold">Meaning of the Equation</h3>
+                <h3 className="text-xs font-mono tracking-widest text-[rgba(220,208,188,0.45)] uppercase mb-5 font-bold card-section-title">Meaning of the Equation</h3>
                 <p className="text-sm md:text-base opacity-85 font-body leading-relaxed">{eq.description}</p>
               </div>
               <div>
@@ -603,10 +625,10 @@ function EquationFullView({ equation, onClose, initialParams }) {
             </div>
 
             {/* Right Card: Formula & Variables */}
-            <div className="rounded-2xl border flex flex-col gap-4" style={cardStyle}>
+            <div className={cardClass + ' flex flex-col gap-4'} style={cardStyle}>
               <div>
                 <h3 className="text-xs font-mono tracking-widest text-[rgba(220,208,188,0.45)] uppercase mb-3 font-bold">Formula</h3>
-                <div className="flex justify-center py-4 px-6 rounded-xl border border-[rgba(196,149,106,0.15)]" style={{ background: `${eq.color}08` }}>
+                <div className="formula-display flex justify-center py-4 px-6 rounded-xl border border-[rgba(196,149,106,0.15)]" style={{ background: `${eq.color}08` }}>
                   <span className="font-display text-2xl md:text-3xl font-bold tracking-wide" style={{ color: eq.color, whiteSpace: 'pre-line' }}>
                     {eq.formula}
                   </span>
@@ -658,7 +680,7 @@ function EquationFullView({ equation, onClose, initialParams }) {
           {/* Row 2: Inputs and Results Section (Exactly 32px spacing) */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Laboratory Inputs Card */}
-            <div className="flex flex-col gap-6 rounded-2xl border" style={cardStyle}>
+            <div className={cardClass + ' flex flex-col gap-6'} style={cardStyle}>
               <h2 className="text-xl md:text-2xl font-bold font-display text-[#E8DDCC] border-b border-[rgba(255,255,255,0.05)] pb-4 mb-1">Laboratory Inputs</h2>
               <div ref={setInputsEl} className="flex flex-col gap-5">
                 {/* Dynamic portal content (actual numeric fields with Calc buttons) */}
@@ -666,7 +688,7 @@ function EquationFullView({ equation, onClose, initialParams }) {
             </div>
 
             {/* Calculated Results Card */}
-            <div className="flex flex-col gap-6 rounded-2xl border" style={cardStyle}>
+            <div className={cardClass + ' flex flex-col gap-6'} style={cardStyle}>
               <h2 className="text-xl md:text-2xl font-bold font-display text-[#E8DDCC] border-b border-[rgba(255,255,255,0.05)] pb-4 mb-1">Calculated Results</h2>
               <div ref={setResultsEl} className="flex flex-col gap-5">
                 {/* Dynamic portal content (derived state variables with clear spacing) */}
@@ -675,7 +697,7 @@ function EquationFullView({ equation, onClose, initialParams }) {
           </div>
 
           {/* Row 3: Simulation Section */}
-          <div className="w-full flex flex-col gap-6 rounded-2xl border animate-fade-in" style={{ ...cardStyle, background: 'rgba(255,255,255,0.005)' }}>
+          <div className={cardClass + ' w-full flex flex-col gap-6 animate-fade-in'} style={{ ...cardStyle, background: 'rgba(255,255,255,0.005)' }}>
             {/* Simulation header */}
             <div className="border-b border-[rgba(196,149,106,0.15)] pb-5">
               <h2 className="text-xl md:text-2xl font-bold font-display text-[#E8DDCC] mb-3">{metadata.title}</h2>
@@ -683,17 +705,17 @@ function EquationFullView({ equation, onClose, initialParams }) {
             </div>
 
             {/* Compact Simulation Info Bar */}
-            <div className="flex flex-wrap gap-4 items-center px-5 py-3.5 rounded-xl" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(196,149,106,0.08)' }}>
+            <div className="sim-info-bar flex flex-wrap gap-4 items-center px-5 py-3.5 rounded-xl" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(196,149,106,0.08)' }}>
               <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider" style={{ color: `${eq.color}AA` }}>
                 <span className="w-1.5 h-1.5 rounded-full" style={{ background: eq.color }} />
                 <span>X: {metadata.xAxis}</span>
               </div>
-              <span className="text-[rgba(220,208,188,0.15)]" style={{ fontSize: '10px' }}>│</span>
+              <span className="sim-info-separator text-[rgba(220,208,188,0.15)]" style={{ fontSize: '10px' }}>│</span>
               <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-[#88C0B8AA]">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#88C0B8]" />
                 <span>Y: {metadata.yAxis}</span>
               </div>
-              <span className="text-[rgba(220,208,188,0.15)]" style={{ fontSize: '10px' }}>│</span>
+              <span className="sim-info-separator text-[rgba(220,208,188,0.15)]" style={{ fontSize: '10px' }}>│</span>
               <div className="text-[10px] font-mono uppercase tracking-wider text-[rgba(220,208,188,0.4)]">
                 Units: {metadata.units}
               </div>
@@ -701,7 +723,7 @@ function EquationFullView({ equation, onClose, initialParams }) {
 
             {/* Dynamic Simulation Info Panel */}
             {metadata.simInfo && (
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="sim-state-panels flex flex-col sm:flex-row gap-4">
                 <div className="flex-1 p-5 rounded-xl" style={{ background: 'rgba(255,255,255,0.015)', border: '1px solid rgba(196,149,106,0.1)', borderLeft: `3px solid ${eq.color}40` }}>
                   <div className="flex items-center gap-2 mb-2">
                     <span className="w-1.5 h-1.5 rounded-full" style={{ background: eq.color }} />
@@ -720,15 +742,15 @@ function EquationFullView({ equation, onClose, initialParams }) {
             )}
 
             {eq.Simulator ? (
-              <div className="w-full relative mt-1">
+              <div className="w-full relative mt-1 sim-canvas-wrapper">
                 {/* Y-Axis Label Annotation */}
-                <div className="absolute top-4 left-4 z-20 flex items-center gap-1.5 text-[10px] font-mono text-[rgba(220,208,188,0.65)] uppercase tracking-wider bg-[rgba(20,18,16,0.9)] px-3 py-2 rounded-lg border border-[rgba(196,149,106,0.12)] pointer-events-none">
+                <div className="sim-canvas-annotation absolute top-4 left-4 z-20 flex items-center gap-1.5 text-[10px] font-mono text-[rgba(220,208,188,0.65)] uppercase tracking-wider bg-[rgba(20,18,16,0.9)] px-3 py-2 rounded-lg border border-[rgba(196,149,106,0.12)] pointer-events-none">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#88C0B8]" />
                   <span>Y: {metadata.yAxis}</span>
                 </div>
 
                 {/* Scale/Units Annotation */}
-                <div className="absolute top-4 right-4 z-20 text-[10px] font-mono text-[rgba(220,208,188,0.55)] uppercase tracking-wider bg-[rgba(20,18,16,0.9)] px-3 py-2 rounded-lg border border-[rgba(196,149,106,0.12)] pointer-events-none">
+                <div className="sim-canvas-annotation absolute top-4 right-4 z-20 text-[10px] font-mono text-[rgba(220,208,188,0.55)] uppercase tracking-wider bg-[rgba(20,18,16,0.9)] px-3 py-2 rounded-lg border border-[rgba(196,149,106,0.12)] pointer-events-none">
                   <span>{metadata.units}</span>
                 </div>
 
@@ -736,7 +758,7 @@ function EquationFullView({ equation, onClose, initialParams }) {
                 <eq.Simulator equation={eq} inputsTarget={inputsEl} resultsTarget={resultsEl} initialParams={initialParams} />
 
                 {/* X-Axis Label Annotation */}
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 text-[10px] font-mono text-[rgba(220,208,188,0.65)] uppercase tracking-wider bg-[rgba(20,18,16,0.9)] px-3 py-2 rounded-lg border border-[rgba(196,149,106,0.12)] pointer-events-none">
+                <div className="sim-canvas-annotation absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 text-[10px] font-mono text-[rgba(220,208,188,0.65)] uppercase tracking-wider bg-[rgba(20,18,16,0.9)] px-3 py-2 rounded-lg border border-[rgba(196,149,106,0.12)] pointer-events-none">
                   <span className="w-1.5 h-1.5 rounded-full" style={{ background: eq.color }} />
                   <span>X: {metadata.xAxis}</span>
                 </div>
@@ -749,7 +771,7 @@ function EquationFullView({ equation, onClose, initialParams }) {
           </div>
 
           {/* Row 4: Scientific Interpretation */}
-          <div className="rounded-2xl border" style={cardStyle}>
+          <div className={cardClass} style={cardStyle}>
             <h2 className="text-xl md:text-2xl font-bold font-display text-[#E8DDCC] border-b border-[rgba(255,255,255,0.05)] pb-4 mb-5">Physical Meaning</h2>
             <div className="flex flex-col gap-4">
               {getInterpretation(eq.id, initialParams?.params || {}).map((line, i) => (
@@ -821,7 +843,7 @@ export default function Explore({ initialEquationId, initialParams, onEquationCo
             /* ═══ FULL-PAGE EQUATION VIEW ═══ */
             <motion.div
               key="equation-detail"
-              className="px-4 md:px-8 pb-24 w-full"
+              className="px-4 md:px-8 pb-24 w-full max-w-[100vw] overflow-x-hidden"
               style={{ paddingTop: '150px' }}
             >
               <EquationFullView
@@ -841,9 +863,9 @@ export default function Explore({ initialEquationId, initialParams, onEquationCo
               className="w-full"
             >
               {/* Header */}
-              <div className="text-center w-full" style={{ paddingTop: '130px', paddingBottom: '32px' }}>
+              <div className="explore-header text-center w-full" style={{ paddingTop: '130px', paddingBottom: '32px' }}>
                 <motion.div initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-                  <span className="inline-flex items-center gap-2 mb-8 px-5 py-2 rounded-full text-xs tracking-widest uppercase"
+                  <span className="explore-header-tag inline-flex items-center gap-2 mb-8 px-5 py-2 rounded-full text-xs tracking-widest uppercase"
                     style={{ color: 'rgba(196,149,106,0.65)', border: '1px solid rgba(196,149,106,0.2)', background: 'rgba(196,149,106,0.06)', letterSpacing: '0.18em' }}>
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
                     Interactive Equations
@@ -906,40 +928,40 @@ export default function Explore({ initialEquationId, initialParams, onEquationCo
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="px-8 pb-10"
+                    className="explore-search-outer px-8 pb-10"
                   >
-                    <div className="max-w-5xl mx-auto">
+                  <div className="explore-search-results max-w-5xl mx-auto">
                       <p style={{ fontSize: '13px', color: 'rgba(220,200,165,0.35)', marginBottom: '20px' }}>
                         {searchResults.length} result{searchResults.length !== 1 ? 's' : ''} for "{search}"
                       </p>
                       <div className="flex flex-col gap-3">
                         {searchResults.map((eq, idx) => (
                            <motion.button
-                            key={eq.id}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: idx * 0.04 }}
-                            onClick={() => handleSelectEquation(eq)}
-                            className="flex items-center justify-between w-full rounded-xl cursor-pointer"
-                            style={{ padding: '18px 24px', background: 'rgba(255,255,255,0.025)', border: `1px solid ${eq.color}40`, textAlign: 'left', transition: 'all 0.18s', fontFamily: 'var(--font-body)' }}
-                            whileHover={{ background: 'rgba(255,255,255,0.05)', borderColor: `${eq.color}80` }}
-                          >
-                            <div className="flex items-center gap-4">
-                              <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: eq.color }} />
-                              <div>
-                                <span style={{ fontSize: '16.5px', fontWeight: 500, color: 'var(--color-text-secondary)', display: 'block' }}>{eq.name}</span>
-                                <span style={{ fontSize: '12px', color: 'rgba(220,208,188,0.35)', marginTop: '3px', display: 'block' }}>
-                                  {BRANCHES.find(b => b.id === eq.branch)?.label}
-                                </span>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-4">
-                              <span style={{ fontFamily: 'var(--font-display)', fontSize: '15px', color: `${eq.color}80`, whiteSpace: 'pre-line' }}>{eq.formula}</span>
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(220,208,188,0.3)" strokeWidth="2">
-                                <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
-                              </svg>
-                            </div>
-                          </motion.button>
+                             key={eq.id}
+                             initial={{ opacity: 0, y: 10 }}
+                             animate={{ opacity: 1, y: 0 }}
+                             transition={{ delay: idx * 0.04 }}
+                             onClick={() => handleSelectEquation(eq)}
+                             className="explore-search-result-item flex items-center justify-between w-full rounded-xl cursor-pointer"
+                             style={{ padding: '18px 24px', background: 'rgba(255,255,255,0.025)', border: `1px solid ${eq.color}40`, textAlign: 'left', transition: 'all 0.18s', fontFamily: 'var(--font-body)' }}
+                             whileHover={{ background: 'rgba(255,255,255,0.05)', borderColor: `${eq.color}80` }}
+                           >
+                             <div className="flex items-center gap-4">
+                               <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: eq.color }} />
+                               <div>
+                                 <span style={{ fontSize: '16.5px', fontWeight: 500, color: 'var(--color-text-secondary)', display: 'block' }}>{eq.name}</span>
+                                 <span style={{ fontSize: '12px', color: 'rgba(220,208,188,0.35)', marginTop: '3px', display: 'block' }}>
+                                   {BRANCHES.find(b => b.id === eq.branch)?.label}
+                                 </span>
+                               </div>
+                             </div>
+                             <div className="explore-search-result-formula hide-mobile flex items-center gap-4">
+                               <span style={{ fontFamily: 'var(--font-display)', fontSize: '15px', color: `${eq.color}80`, whiteSpace: 'pre-line' }}>{eq.formula}</span>
+                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(220,208,188,0.3)" strokeWidth="2">
+                                 <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                               </svg>
+                             </div>
+                           </motion.button>
                         ))}
                         {searchResults.length === 0 && (
                           <div className="text-center py-20" style={{ color: 'rgba(220,208,188,0.25)', fontSize: '15px' }}>
@@ -958,14 +980,14 @@ export default function Explore({ initialEquationId, initialParams, onEquationCo
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.4, delay: 0.15 }}
-                  className="px-8 pb-20"
+                  className="explore-browse-outer px-8 pb-20"
                   style={{ marginTop: '30px' }}
                 >
-                  <div className="max-w-7xl mx-auto flex gap-16 items-start w-full px-4">
+                  <div className="max-w-7xl mx-auto explore-browse-layout flex gap-16 items-start w-full">
 
                     {/* LEFT: Branches */}
-                    <div className="shrink-0" style={{ width: '250px' }}>
-                      <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(196,149,106,0.45)', marginBottom: '20px' }}>
+                    <div className="explore-branch-sidebar shrink-0" style={{ width: '250px' }}>
+                      <p className="branch-header" style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(196,149,106,0.45)', marginBottom: '20px' }}>
                         Branches
                       </p>
                       <div className="flex flex-col gap-2.5">
@@ -996,10 +1018,10 @@ export default function Explore({ initialEquationId, initialParams, onEquationCo
                     </div>
 
                     {/* Divider */}
-                    <div style={{ width: '1px', alignSelf: 'stretch', background: 'rgba(196,149,106,0.07)', minHeight: '500px' }} />
+                    <div className="explore-branch-divider" style={{ width: '1px', alignSelf: 'stretch', background: 'rgba(196,149,106,0.07)', minHeight: '500px' }} />
 
                     {/* RIGHT: Equation Names */}
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(196,149,106,0.45)', marginBottom: '20px' }}>
                         {(BRANCHES.find(b => b.id === activeBranch) || BRANCHES[0]).label} · {listedEquations.length} equations
                       </p>
@@ -1011,7 +1033,7 @@ export default function Explore({ initialEquationId, initialParams, onEquationCo
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.35, delay: idx * 0.04 }}
                             onClick={() => handleSelectEquation(eq)}
-                            className="flex items-center justify-between w-full rounded-xl cursor-pointer"
+                            className="equation-list-item flex items-center justify-between w-full rounded-xl cursor-pointer"
                             style={{
                               padding: '18px 26px',
                               background: 'rgba(255,255,255,0.02)',
@@ -1021,13 +1043,13 @@ export default function Explore({ initialEquationId, initialParams, onEquationCo
                             }}
                             whileHover={{ background: 'rgba(255,255,255,0.04)', borderColor: `${eq.color}55` }}
                           >
-                            <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-4 min-w-0">
                               <span className="w-2 h-2 rounded-full shrink-0" style={{ background: eq.color }} />
-                              <span style={{ fontSize: '16.5px', fontWeight: 500, color: 'var(--color-text-secondary)', letterSpacing: '-0.01em' }}>
+                              <span className="equation-list-name" style={{ fontSize: '16.5px', fontWeight: 500, color: 'var(--color-text-secondary)', letterSpacing: '-0.01em' }}>
                                 {eq.name}
                               </span>
                             </div>
-                            <div className="flex items-center gap-5">
+                            <div className="hide-mobile flex items-center gap-5 shrink-0">
                               <span style={{ fontFamily: 'var(--font-display)', fontSize: '14.5px', color: 'rgba(220,208,188,0.25)', whiteSpace: 'pre-line' }}>
                                 {eq.formula}
                               </span>

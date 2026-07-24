@@ -45,13 +45,13 @@ const pageVariants = {
 function Breadcrumb({ navStack, onBreadcrumbClick }) {
   if (navStack.length === 0) return null
   return (
-    <div style={{
+    <div className="breadcrumb-wrapper" style={{
       padding: '88px 48px 8px',
       maxWidth: 1400,
       margin: '0 auto',
       width: '100%',
     }}>
-      <div style={{
+      <div className="breadcrumb-inner" style={{
         display: 'inline-flex',
         alignItems: 'center',
         gap: 8,

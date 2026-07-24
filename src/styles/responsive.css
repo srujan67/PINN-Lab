@@ -1,0 +1,397 @@
+/* ═══════════════════════════════════════════════════════════════
+   Responsive Overrides — PINN LAB
+   Desktop-first: ≥1200px unaffected, 768-1199px tablet, <768px mobile
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Layout Containers ─── */
+.responsive-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+@media (max-width: 1199px) {
+  .responsive-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .responsive-container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* ─── Breadcrumb ─── */
+@media (max-width: 1199px) {
+  .breadcrumb-wrapper {
+    padding: 82px 24px 8px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .breadcrumb-wrapper {
+    padding: 76px 16px 6px !important;
+  }
+  .breadcrumb-inner {
+    font-size: 11px !important;
+    padding: 8px 14px !important;
+    flex-wrap: wrap;
+  }
+}
+
+/* ─── Navbar ─── */
+@media (max-width: 1199px) {
+  .navbar-desktop-links {
+    display: none !important;
+  }
+  .navbar-hamburger {
+    display: flex !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .navbar-desktop-links {
+    display: flex !important;
+  }
+  .navbar-hamburger {
+    display: none !important;
+  }
+  .navbar-mobile-drawer {
+    display: none !important;
+  }
+}
+
+/* ─── Explore: Browse View (Branch + Equation List) ─── */
+@media (max-width: 1199px) {
+  .explore-browse-layout {
+    flex-direction: column !important;
+    gap: 32px !important;
+  }
+  .explore-branch-sidebar {
+    width: 100% !important;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .explore-branch-sidebar > * {
+    flex: 1 1 auto;
+    min-width: 120px;
+  }
+  .explore-branch-divider {
+    display: none !important;
+  }
+  .explore-branch-sidebar .branch-header {
+    width: 100%;
+    margin-bottom: 4px;
+  }
+}
+
+/* ─── Explore: Search Results ─── */
+@media (max-width: 767px) {
+  .explore-search-outer {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+  .explore-search-results {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .explore-search-result-item {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    padding: 14px 16px !important;
+  }
+  .explore-search-result-formula {
+    font-size: 13px !important;
+  }
+}
+
+/* ─── Explore: Browse Outer Container (mobile) ─── */
+@media (max-width: 767px) {
+  .explore-browse-outer {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    width: 100% !important;
+  }
+  .explore-browse-layout {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+/* ─── Equation Full View Cards ─── */
+@media (max-width: 1199px) {
+  .equation-view-card {
+    padding: 1.8rem !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .equation-view-card {
+    padding: 1.2rem !important;
+  }
+  .equation-view-card .card-section-title {
+    font-size: 0.65rem !important;
+  }
+}
+
+/* ─── Equation Full View content width ─── */
+@media (max-width: 767px) {
+  .equation-view-wrapper {
+    width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+/* ─── Simulator Canvas Container ─── */
+.sim-canvas-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+@media (max-width: 1199px) {
+  .sim-canvas-wrapper canvas {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1100 / 380;
+  }
+}
+
+@media (max-width: 767px) {
+  .sim-canvas-wrapper canvas {
+    aspect-ratio: 1100 / 380;
+  }
+  .sim-canvas-overlay {
+    display: none !important;
+  }
+  .sim-canvas-annotation {
+    font-size: 8px !important;
+    padding: 4px 8px !important;
+  }
+}
+
+/* ─── Simulation Info Bar ─── */
+@media (max-width: 767px) {
+  .sim-info-bar {
+    flex-direction: column !important;
+    gap: 6px !important;
+    padding: 10px 14px !important;
+  }
+  .sim-info-separator {
+    display: none !important;
+  }
+}
+
+/* ─── Simulation State Panels ─── */
+@media (max-width: 767px) {
+  .sim-state-panels {
+    flex-direction: column !important;
+  }
+}
+
+/* ─── Laboratory Inputs & Results ─── */
+@media (max-width: 767px) {
+  .input-field-card {
+    padding: 12px !important;
+  }
+  .input-field-card input {
+    font-size: 14px !important;
+    padding: 10px 12px !important;
+  }
+}
+
+/* ─── Industry Pages ─── */
+@media (max-width: 1199px) {
+  .industry-page-sections {
+    padding: 60px 20px !important;
+  }
+  .industry-section-cards {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+    gap: 20px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .industry-page-hero {
+    padding-top: 100px !important;
+  }
+  .industry-key-vars {
+    flex-wrap: wrap;
+  }
+  .industry-section-card {
+    padding: 20px !important;
+  }
+}
+
+/* ─── Applications Page: Industry Cards Grid ─── */
+@media (max-width: 1199px) {
+  .app-section .industries-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
+    gap: 24px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .app-section .industries-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ─── Applications Page: Detail Panel ─── */
+@media (max-width: 1199px) {
+  .detail-panel-content {
+    padding: 24px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .detail-panel-overlay > div {
+    max-width: 100% !important;
+  }
+  .detail-panel-header {
+    padding: 20px 16px !important;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .detail-panel-animation {
+    height: 35vh !important;
+    min-height: 200px !important;
+    padding: 12px 16px !important;
+  }
+  .detail-panel-scroll {
+    padding: 20px 16px !important;
+  }
+  .detail-panel-buttons {
+    flex-direction: column;
+  }
+}
+
+/* ─── History Page ─── */
+@media (max-width: 767px) {
+  .history-page-content {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  .history-item-card {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    padding: 14px 16px !important;
+  }
+  .history-auth-form {
+    padding: 24px 16px !important;
+  }
+}
+
+/* ─── Explore Page Header ─── */
+@media (max-width: 767px) {
+  .explore-header {
+    padding-top: 100px !important;
+    padding-bottom: 20px !important;
+  }
+  .explore-header-tag {
+    margin-bottom: 20px !important;
+    font-size: 10px !important;
+  }
+}
+
+/* ─── Hero Section ─── */
+@media (max-width: 767px) {
+  .hero-content {
+    padding-top: 60px !important;
+    padding-bottom: 40px !important;
+  }
+  .hero-example-btn {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+}
+
+/* ─── Industry Page Info Cards ─── */
+@media (max-width: 767px) {
+  .industry-info-cards {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .industry-info-cards > * {
+    flex: 1 1 auto !important;
+    max-width: none !important;
+  }
+}
+
+/* ─── Formula Display ─── */
+@media (max-width: 767px) {
+  .formula-display {
+    font-size: 1.1rem !important;
+    padding: 12px !important;
+    overflow-x: auto;
+  }
+}
+
+/* ─── Equation List Items ─── */
+@media (max-width: 767px) {
+  .equation-list-item {
+    padding: 14px 18px !important;
+  }
+  .equation-list-name {
+    font-size: 14px !important;
+  }
+}
+
+/* ─── About Page ─── */
+@media (max-width: 1199px) {
+  .about-page-hero {
+    padding: 120px 20px 80px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .about-page-hero {
+    padding: 100px 16px 60px !important;
+  }
+  .about-reference-item {
+    flex-direction: column !important;
+    gap: 6px !important;
+  }
+}
+
+/* ─── About Page: section spacing and cards ─── */
+@media (max-width: 767px) {
+  .about-page section {
+    padding-top: 60px !important;
+    padding-bottom: 60px !important;
+  }
+}
+
+/* ─── General Touch Targets (Mobile) ─── */
+@media (max-width: 767px) {
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  button, 
+  .btn-like {
+    min-height: 44px;
+  }
+}
+
+/* ─── Hide on mobile / show on desktop ─── */
+@media (max-width: 767px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .show-mobile-only {
+    display: none !important;
+  }
+}
